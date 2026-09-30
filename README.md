@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Chat Workspace
 
-## Getting Started
+An AI-powered workspace built with **Next.js, TypeScript, and modern LLM tooling**.
 
-First, run the development server:
+The goal of this project is to build a production-oriented GenAI application that supports conversational AI, RAG, AI agents, and multiple knowledge domains.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Goals
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* ChatGPT-like conversational interface
+* Local LLM development with Ollama
+* LLM integration using TypeScript/Node.js
+* Retrieval-Augmented Generation (RAG)
+* Document and knowledge-base management
+* AI agents and agent workflows
+* Multiple AI projects/domains
+* Future AWS Bedrock integration
+* Production-oriented architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🏗️ Planned Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application will evolve into an AI workspace where each project can have its own:
 
-## Learn More
+* Conversations
+* System instructions
+* Knowledge base
+* Documents
+* RAG configuration
+* Tools
+* AI agents
+* Permissions
 
-To learn more about Next.js, take a look at the following resources:
+Example projects may include:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* General AI
+* Healthcare / NMC
+* FinTech
+* Other enterprise domains
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
 
-## Deploy on Vercel
+### Frontend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Next.js
+* TypeScript
+* React
+* Ant Design
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### AI
+
+* Ollama
+* LangChain
+* LangGraph
+* RAG
+* LLMs
+* AWS Bedrock (planned)
+
+### Backend / Data
+
+* Node.js
+* TypeScript
+* PostgreSQL
+* pgvector
+* Redis
+
+### Development
+
+* Yarn
+* ESLint
+* Jest
+* Docker
+
+## 📌 Current Status
+
+The project is currently in the initial frontend setup phase.
+
+The first milestone is to build the core AI workspace UI and establish the application architecture before adding LLM and RAG functionality.
+
+## 📄 License
+
+This project is currently intended as a personal learning and portfolio project.

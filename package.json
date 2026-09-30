@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.3.4",
+    "antd": "^6.6.5",
     "next": "16.3.7",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -20,6 +22,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.7",
+    "prettier": "^3.9.9",
     "typescript": "^5"
   },
   "packageManager": "yarn@1.22.22"
