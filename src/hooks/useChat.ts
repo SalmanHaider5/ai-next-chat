@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Chat, ChatMessage } from "@/types/chat";
+import { sendMessage as sendMessageApi } from "@/lib/api/chats";
 
 type UseChatReturn = {
   chats: Chat[];
@@ -19,9 +20,7 @@ export function useChat(): UseChatReturn {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const activeChat = chats.find(
-    (chat) => chat.id === activeChatId,
-  );
+  const activeChat = chats.find((chat) => chat.id === activeChatId);
 
   const createChat = () => {
     const newChat: Chat = {
@@ -39,7 +38,7 @@ export function useChat(): UseChatReturn {
   };
 
   const sendMessage = async (content: string) => {
-    if (!activeChatId || isLoading) {
+    if (!activeChatId || !content.trim() || isLoading) {
       return;
     }
 
@@ -49,55 +48,47 @@ export function useChat(): UseChatReturn {
       content,
     };
 
-    setChats((current) =>
-      current.map((chat) => {
-        if (chat.id !== activeChatId) {
-          return chat;
-        }
-
-        return {
-          ...chat,
-          title:
-            chat.messages.length === 0
-              ? content.slice(0, 40)
-              : chat.title,
-          messages: [...chat.messages, userMessage],
-        };
-      }),
+    setChats((currentChats) =>
+      currentChats.map((chat) =>
+        chat.id === activeChatId
+          ? {
+              ...chat,
+              messages: [...chat.messages, userMessage],
+            }
+          : chat,
+      ),
     );
 
     setIsLoading(true);
 
-    // Temporary frontend-only assistant response.
-    // This will become an API call later.
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const result = await sendMessageApi(content);
 
-    const assistantMessage: ChatMessage = {
-      id: crypto.randomUUID(),
-      role: "assistant",
-      content: `You said: "${content}"`,
-    };
+      const assistantMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: result.response,
+      };
 
-    setChats((current) =>
-      current.map((chat) => {
-        if (chat.id !== activeChatId) {
-          return chat;
-        }
-
-        return {
-          ...chat,
-          messages: [...chat.messages, assistantMessage],
-        };
-      }),
-    );
-
-    setIsLoading(false);
+      setChats((currentChats) =>
+        currentChats.map((chat) =>
+          chat.id === activeChatId
+            ? {
+                ...chat,
+                messages: [...chat.messages, assistantMessage],
+              }
+            : chat,
+        ),
+      );
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const deleteChat = (chatId: string) => {
-    setChats((current) =>
-      current.filter((chat) => chat.id !== chatId),
-    );
+    setChats((current) => current.filter((chat) => chat.id !== chatId));
 
     if (activeChatId === chatId) {
       setActiveChatId(null);

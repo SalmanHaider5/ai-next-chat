@@ -1,6 +1,6 @@
 "use client";
 
-import { Empty, Spin } from "antd";
+import { Spin } from "antd";
 import { useEffect, useRef } from "react";
 import type { Chat as ChatType } from "@/types/chat";
 import ChatComposer from "./ChatComposer";
