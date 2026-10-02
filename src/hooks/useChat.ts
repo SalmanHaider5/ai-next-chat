@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Chat, ChatMessage } from "@/types/chat";
 import { sendMessage as sendMessageApi } from "@/lib/api/chats";
+import { getChats, getChatMessages } from "@/lib/api/chats";
 
 type UseChatReturn = {
   chats: Chat[];
@@ -20,6 +21,26 @@ export function useChat(): UseChatReturn {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    async function loadChats() {
+      try {
+        const chats = await getChats();
+
+        setChats(
+          chats.map((chat) => ({
+            id: chat.id,
+            title: chat.title,
+            messages: [],
+          })),
+        );
+      } catch (error) {
+        console.error("Failed to load chats:", error);
+      }
+    }
+
+    void loadChats();
+  }, []);
+
   const activeChat = chats.find((chat) => chat.id === activeChatId);
 
   const createChat = () => {
@@ -27,14 +48,36 @@ export function useChat(): UseChatReturn {
       id: crypto.randomUUID(),
       title: "New Chat",
       messages: [],
+      persisted: false,
     };
 
     setChats((current) => [newChat, ...current]);
     setActiveChatId(newChat.id);
   };
 
-  const selectChat = (chatId: string) => {
+  const selectChat = async (chatId: string) => {
     setActiveChatId(chatId);
+
+    try {
+      const messages = await getChatMessages(chatId);
+
+      setChats((currentChats) =>
+        currentChats.map((chat) =>
+          chat.id === chatId
+            ? {
+                ...chat,
+                messages: messages.map((message) => ({
+                  id: message.id,
+                  role: message.role,
+                  content: message.content,
+                })),
+              }
+            : chat,
+        ),
+      );
+    } catch (error) {
+      console.error("Failed to load chat messages:", error);
+    }
   };
 
   const sendMessage = async (content: string) => {
@@ -62,7 +105,11 @@ export function useChat(): UseChatReturn {
     setIsLoading(true);
 
     try {
-      const result = await sendMessageApi(content);
+      const chatId = activeChat?.persisted
+        ? activeChat.id
+        : undefined;
+      
+      const result = await sendMessageApi(content, chatId);
 
       const assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),

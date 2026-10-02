@@ -8,4 +8,5 @@ export type Chat = {
   id: string;
   title: string;
   messages: ChatMessage[];
+  persisted: boolean;
 };
