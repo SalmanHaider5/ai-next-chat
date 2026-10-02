@@ -31,6 +31,7 @@ export function useChat(): UseChatReturn {
             id: chat.id,
             title: chat.title,
             messages: [],
+            persisted: true,
           })),
         );
       } catch (error) {
